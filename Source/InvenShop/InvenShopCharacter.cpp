@@ -130,3 +130,14 @@ void AInvenShopCharacter::Interact()
 		}
 	}
 }
+
+void AInvenShopCharacter::UseItem(TSubclassOf<AItem> ItemSubclass)
+{
+	if(ItemSubclass)
+	{
+		if(AItem* Item = ItemSubclass.GetDefaultObject())
+		{
+			Item->Use(this);
+		}
+	}
+}

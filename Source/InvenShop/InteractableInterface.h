@@ -13,13 +13,12 @@ class UInteractableInterface : public UInterface
 	GENERATED_BODY()
 };
 
-/**
- * 
- */
+class AInvenShopCharacter;
 class INVENSHOP_API IInteractableInterface
 {
 	GENERATED_BODY()
 
 public:
-	virtual void Interact(class AInvenShopCharacter* Character) = 0;
+	virtual void Interact(AInvenShopCharacter* Character) = 0;
+	virtual void Use(AInvenShopCharacter* Character) {}
 };

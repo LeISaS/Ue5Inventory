@@ -8,6 +8,7 @@
 #include "InvenShopCharacter.generated.h"
 
 struct FItemData;
+class AItem;
 
 UCLASS(config=Game)
 class AInvenShopCharacter : public ACharacter
@@ -48,9 +49,10 @@ protected:
 	 */
 	void LookUpAtRate(float Rate);
 
-
-
 	void Interact();
+	
+	UFUNCTION(BlueprintCallable,Category="TUTORIAL")
+	void UseItem(TSubclassOf<AItem> ItemSubclass);
 	
 protected:
 	// APawn interface

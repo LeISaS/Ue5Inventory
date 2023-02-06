@@ -30,3 +30,8 @@ void AItem::Interact(class AInvenShopCharacter* Character)
 	Destroy();
 }
 
+void AItem::Use(AInvenShopCharacter* Character)
+{
+	UE_LOG(LogTemp,Warning,TEXT("USING ITEM: %s"), *GetName());
+}
+

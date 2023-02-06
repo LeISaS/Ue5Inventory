@@ -33,4 +33,5 @@ public:
 	virtual void Interact(class AInvenShopCharacter* Character) override;
 	
 	FItemData GetItemData() const {return ItemData;}
+	virtual void Use(AInvenShopCharacter* Character) override;
 };
