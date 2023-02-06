@@ -8,6 +8,7 @@
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/Controller.h"
 #include "GameFramework/SpringArmComponent.h"
+#include "Net/UnrealNetwork.h"
 
 //////////////////////////////////////////////////////////////////////////
 // AInvenShopCharacter
@@ -51,6 +52,14 @@ AInvenShopCharacter::AInvenShopCharacter()
 
 }
 
+void AInvenShopCharacter::OnRep_InventoryItems()
+{
+	if(InventoryItems.Num())
+	{
+		AddItemToInventoryWidget(InventoryItems[InventoryItems.Num()-1]);
+	}
+}
+
 void AInvenShopCharacter::SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent)
 {
 	// Set up gameplay key bindings
@@ -73,6 +82,12 @@ void AInvenShopCharacter::SetupPlayerInputComponent(class UInputComponent* Playe
 	
 }
 
+void AInvenShopCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+	DOREPLIFETIME_CONDITION(AInvenShopCharacter, InventoryItems,COND_OwnerOnly);
+}
+
 void AInvenShopCharacter::UpdateStats_Implementation(float _Hunger, float _Health)
 {
 	
@@ -90,6 +105,18 @@ void AInvenShopCharacter::RemoveHunger(float Value)
 	Hunger-=Value;
 	UpdateStats(Hunger,Health);
 	UE_LOG(LogTemp,Warning,TEXT("REMOVED HUNGER : %f"),Hunger);
+}
+
+void AInvenShopCharacter::AddInventoryItem(FItemData ItemData)
+{
+	if(HasAuthority())
+	{
+		InventoryItems.Add(ItemData);
+		if(IsLocallyControlled())
+		{
+			OnRep_InventoryItems();
+		}
+	}
 }
 
 void AInvenShopCharacter::TurnAtRate(float Rate)
@@ -137,7 +164,19 @@ void AInvenShopCharacter::Interact()
 {
 	FVector Start = FollowCamera->GetComponentLocation();
 	FVector End = Start + FollowCamera->GetForwardVector() * 500.f;
+	if(HasAuthority())
+	{
+		Interact(Start,End);
+	}
+	else
+	{
+		Server_Interact(Start,End);
+	}
 
+}
+
+void AInvenShopCharacter::Interact(FVector Start, FVector End)
+{
 	FHitResult HitResult;
 	FCollisionQueryParams Params;
 	Params.AddIgnoredActor(this);
@@ -148,6 +187,16 @@ void AInvenShopCharacter::Interact()
 			Interface->Interact(this);
 		}
 	}
+}
+
+void AInvenShopCharacter::Server_Interact_Implementation(FVector Start, FVector End)
+{
+	Interact(Start,End);
+}
+
+bool AInvenShopCharacter::Server_Interact_Validate(FVector Start, FVector End)
+{
+	return true;
 }
 
 void AInvenShopCharacter::UseItem(TSubclassOf<AItem> ItemSubclass)

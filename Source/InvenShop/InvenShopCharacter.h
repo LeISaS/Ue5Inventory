@@ -51,6 +51,11 @@ protected:
 
 	void Interact();
 
+	void Interact(FVector Start, FVector End);
+	
+	UFUNCTION(Server,Reliable,WithValidation)
+	void Server_Interact(FVector Start, FVector End);
+
 	UPROPERTY(BlueprintReadWrite, Category= "TUTORIAL")
 	float Health;
 
@@ -59,25 +64,33 @@ protected:
 	
 	UFUNCTION(BlueprintCallable,Category="TUTORIAL")
 	void UseItem(TSubclassOf<AItem> ItemSubclass);
+
+	UPROPERTY(ReplicatedUsing=OnRep_InventoryItems,BlueprintReadWrite,Category="TUTORIAL")
+	TArray<FItemData> InventoryItems;
+
+	UFUNCTION()
+	void OnRep_InventoryItems();
+
+	UFUNCTION(BlueprintImplementableEvent,Category="TUTORIAL")
+	void AddItemToInventoryWidget(FItemData ItemData);
 	
 protected:
 	// APawn interface
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 	// End of APawn interface
+	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 
 public:
 	/** Returns CameraBoom subobject **/
 	FORCEINLINE class USpringArmComponent* GetCameraBoom() const { return CameraBoom; }
 	/** Returns FollowCamera subobject **/
 	FORCEINLINE class UCameraComponent* GetFollowCamera() const { return FollowCamera; }
-
-	UFUNCTION(BlueprintImplementableEvent,Category="TUTORIAL")
-	void AddItemToInventoryWidget(FItemData ItemData);
 	
 	UFUNCTION(BlueprintNativeEvent,Category="TUTORIAL")
 	void UpdateStats(float _Hunger, float _Health);
 	
 	void AddHealth(float Value);
 	void RemoveHunger(float Value);
+	void AddInventoryItem(FItemData ItemData);
 };
 

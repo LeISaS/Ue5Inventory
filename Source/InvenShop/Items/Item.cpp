@@ -13,6 +13,8 @@ AItem::AItem()
 	ItemMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("StaticMeshComponent"));
 	RootComponent = ItemMesh;
 
+	bReplicates = true;
+	
 	ItemData.ItemClass = StaticClass();
 }
 
@@ -25,11 +27,11 @@ void AItem::BeginPlay()
 
 void AItem::Interact(class AInvenShopCharacter* Character)
 {
-	if(Character)
+	if(HasAuthority() && Character)
 	{
-		Character->AddItemToInventoryWidget(ItemData);
+		Character->AddInventoryItem(ItemData);
+		Destroy();
 	}
-	Destroy();
 }
 
 void AItem::Use(AInvenShopCharacter* Character)
