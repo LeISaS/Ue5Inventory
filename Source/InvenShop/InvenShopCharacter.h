@@ -50,6 +50,12 @@ protected:
 	void LookUpAtRate(float Rate);
 
 	void Interact();
+
+	UPROPERTY(BlueprintReadWrite, Category= "TUTORIAL")
+	float Health;
+
+	UPROPERTY(BlueprintReadWrite, Category= "TUTORIAL")
+	float Hunger;
 	
 	UFUNCTION(BlueprintCallable,Category="TUTORIAL")
 	void UseItem(TSubclassOf<AItem> ItemSubclass);
@@ -67,5 +73,8 @@ public:
 
 	UFUNCTION(BlueprintImplementableEvent,Category="TUTORIAL")
 	void AddItemToInventoryWidget(FItemData ItemData);
+
+	void AddHealth(float Value);
+	void RemoveHunger(float Value);
 };
 

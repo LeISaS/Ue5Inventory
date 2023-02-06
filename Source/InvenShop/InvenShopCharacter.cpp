@@ -73,6 +73,18 @@ void AInvenShopCharacter::SetupPlayerInputComponent(class UInputComponent* Playe
 	
 }
 
+void AInvenShopCharacter::AddHealth(float Value)
+{
+	Health+=Value;
+	UE_LOG(LogTemp,Warning,TEXT("ADDED HEALTH : %f"),Health);
+}
+
+void AInvenShopCharacter::RemoveHunger(float Value)
+{
+	Hunger-=Value;
+	UE_LOG(LogTemp,Warning,TEXT("REMOVED HUNGER : %f"),Hunger);
+}
+
 void AInvenShopCharacter::TurnAtRate(float Rate)
 {
 	// calculate delta for this frame from the rate information

@@ -12,6 +12,8 @@ AItem::AItem()
 
 	ItemMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("StaticMeshComponent"));
 	RootComponent = ItemMesh;
+
+	ItemData.ItemClass = StaticClass();
 }
 
 // Called when the game starts or when spawned
