@@ -8,6 +8,7 @@
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/Controller.h"
 #include "GameFramework/SpringArmComponent.h"
+#include "Kismet/KismetSystemLibrary.h"
 #include "Net/UnrealNetwork.h"
 
 //////////////////////////////////////////////////////////////////////////
@@ -86,6 +87,9 @@ void AInvenShopCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& 
 {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 	DOREPLIFETIME_CONDITION(AInvenShopCharacter, InventoryItems,COND_OwnerOnly);
+	DOREPLIFETIME(AInvenShopCharacter,Health);
+	DOREPLIFETIME(AInvenShopCharacter,Hunger);
+	
 }
 
 void AInvenShopCharacter::UpdateStats_Implementation(float _Hunger, float _Health)
@@ -96,14 +100,20 @@ void AInvenShopCharacter::UpdateStats_Implementation(float _Hunger, float _Healt
 void AInvenShopCharacter::AddHealth(float Value)
 {
 	Health+=Value;
-	UpdateStats(Hunger,Health);
+	if(IsLocallyControlled())
+	{
+		UpdateStats(Hunger,Health);
+	}
 	UE_LOG(LogTemp,Warning,TEXT("ADDED HEALTH : %f"),Health);
 }
 
 void AInvenShopCharacter::RemoveHunger(float Value)
 {
 	Hunger-=Value;
-	UpdateStats(Hunger,Health);
+	if(IsLocallyControlled())
+	{
+		UpdateStats(Hunger,Health);
+	}
 	UE_LOG(LogTemp,Warning,TEXT("REMOVED HUNGER : %f"),Hunger);
 }
 
@@ -199,13 +209,50 @@ bool AInvenShopCharacter::Server_Interact_Validate(FVector Start, FVector End)
 	return true;
 }
 
+void AInvenShopCharacter::OnRep_Stats()
+{
+	if(IsLocallyControlled())
+	{
+		UpdateStats(Hunger,Health);
+	}
+}
+
 void AInvenShopCharacter::UseItem(TSubclassOf<AItem> ItemSubclass)
 {
 	if(ItemSubclass)
 	{
-		if(AItem* Item = ItemSubclass.GetDefaultObject())
+		if(HasAuthority())
 		{
-			Item->Use(this);
+			if(AItem* Item = ItemSubclass.GetDefaultObject())
+			{
+				Item->Use(this);
+			}
+		}
+		else
+		{
+			if(AItem* Item = ItemSubclass.GetDefaultObject())
+			{
+				Item->Use(this);
+			}
+			Server_UseItem(ItemSubclass);
 		}
 	}
+}
+
+void AInvenShopCharacter::Server_UseItem_Implementation(TSubclassOf<AItem> ItemSubclass)
+{
+	for(FItemData& Item : InventoryItems)
+	{
+		if(Item.ItemClass==ItemSubclass)
+		{
+			UseItem(ItemSubclass);
+			return;
+		}
+	}
+	UseItem(ItemSubclass);
+}
+
+bool AInvenShopCharacter::Server_UseItem_Validate(TSubclassOf<AItem> ItemSubclass)
+{
+	return true;
 }

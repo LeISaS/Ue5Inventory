@@ -56,15 +56,21 @@ protected:
 	UFUNCTION(Server,Reliable,WithValidation)
 	void Server_Interact(FVector Start, FVector End);
 
-	UPROPERTY(BlueprintReadWrite, Category= "TUTORIAL")
+	UPROPERTY(ReplicatedUsing=OnRep_Stats,BlueprintReadWrite, Category= "TUTORIAL")
 	float Health;
 
-	UPROPERTY(BlueprintReadWrite, Category= "TUTORIAL")
+	UPROPERTY(ReplicatedUsing=OnRep_Stats,BlueprintReadWrite, Category= "TUTORIAL")
 	float Hunger;
+
+	UFUNCTION()
+	void OnRep_Stats();
 	
 	UFUNCTION(BlueprintCallable,Category="TUTORIAL")
 	void UseItem(TSubclassOf<AItem> ItemSubclass);
 
+	UFUNCTION(Server, Reliable,WithValidation)
+	void Server_UseItem(TSubclassOf<AItem> ItemSubclass);
+	
 	UPROPERTY(ReplicatedUsing=OnRep_InventoryItems,BlueprintReadWrite,Category="TUTORIAL")
 	TArray<FItemData> InventoryItems;
 
