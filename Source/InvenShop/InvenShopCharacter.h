@@ -73,7 +73,10 @@ public:
 
 	UFUNCTION(BlueprintImplementableEvent,Category="TUTORIAL")
 	void AddItemToInventoryWidget(FItemData ItemData);
-
+	
+	UFUNCTION(BlueprintNativeEvent,Category="TUTORIAL")
+	void UpdateStats(float _Hunger, float _Health);
+	
 	void AddHealth(float Value);
 	void RemoveHunger(float Value);
 };

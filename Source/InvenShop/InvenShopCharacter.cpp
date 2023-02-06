@@ -73,15 +73,22 @@ void AInvenShopCharacter::SetupPlayerInputComponent(class UInputComponent* Playe
 	
 }
 
+void AInvenShopCharacter::UpdateStats_Implementation(float _Hunger, float _Health)
+{
+	
+}
+
 void AInvenShopCharacter::AddHealth(float Value)
 {
 	Health+=Value;
+	UpdateStats(Hunger,Health);
 	UE_LOG(LogTemp,Warning,TEXT("ADDED HEALTH : %f"),Health);
 }
 
 void AInvenShopCharacter::RemoveHunger(float Value)
 {
 	Hunger-=Value;
+	UpdateStats(Hunger,Health);
 	UE_LOG(LogTemp,Warning,TEXT("REMOVED HUNGER : %f"),Hunger);
 }
 
