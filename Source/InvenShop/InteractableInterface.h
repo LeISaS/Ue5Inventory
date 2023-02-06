@@ -21,5 +21,5 @@ class INVENSHOP_API IInteractableInterface
 	GENERATED_BODY()
 
 public:
-	virtual void Interact() = 0;
+	virtual void Interact(class AInvenShopCharacter* Character) = 0;
 };

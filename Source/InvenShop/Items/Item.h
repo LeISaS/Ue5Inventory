@@ -28,6 +28,9 @@ protected:
 	UPROPERTY(EditDefaultsOnly,Category = "TUTORIAL")
 	FItemData ItemData;
 	
-	virtual void Interact() override;
+
+public:
+	virtual void Interact(class AInvenShopCharacter* Character) override;
 	
+	FItemData GetItemData() const {return ItemData;}
 };

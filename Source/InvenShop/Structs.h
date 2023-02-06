@@ -1,4 +1,5 @@
-﻿
+﻿#pragma once
+
 #include "Structs.generated.h"
 
 USTRUCT(BlueprintType)

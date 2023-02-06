@@ -4,7 +4,10 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
+#include "InvenShop/Structs.h"
 #include "InvenShopCharacter.generated.h"
+
+struct FItemData;
 
 UCLASS(config=Game)
 class AInvenShopCharacter : public ACharacter
@@ -46,6 +49,7 @@ protected:
 	void LookUpAtRate(float Rate);
 
 
+
 	void Interact();
 	
 protected:
@@ -58,5 +62,8 @@ public:
 	FORCEINLINE class USpringArmComponent* GetCameraBoom() const { return CameraBoom; }
 	/** Returns FollowCamera subobject **/
 	FORCEINLINE class UCameraComponent* GetFollowCamera() const { return FollowCamera; }
+
+	UFUNCTION(BlueprintImplementableEvent,Category="TUTORIAL")
+	void AddItemToInventoryWidget(FItemData ItemData);
 };
 

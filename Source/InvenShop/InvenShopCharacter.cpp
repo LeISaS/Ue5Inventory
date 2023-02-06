@@ -126,7 +126,7 @@ void AInvenShopCharacter::Interact()
 	{
 		if(IInteractableInterface* Interface = Cast<IInteractableInterface>(HitResult.GetActor()))
 		{
-			Interface->Interact();
+			Interface->Interact(this);
 		}
 	}
 }
