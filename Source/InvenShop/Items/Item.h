@@ -5,6 +5,8 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "InvenShop/InteractableInterface.h"
+#include "InvenShop/Structs.h"
+
 #include "Item.generated.h"
 
 UCLASS()
@@ -23,7 +25,9 @@ protected:
 protected:
 	UPROPERTY(EditDefaultsOnly,Category = "TUTORIAL")
 	class UStaticMeshComponent* ItemMesh;
-
+	UPROPERTY(EditDefaultsOnly,Category = "TUTORIAL")
+	FItemData ItemData;
+	
 	virtual void Interact() override;
 	
 };
