@@ -1,6 +1,7 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
 
 #include "InvenShopCharacter.h"
+#include "InvenShop/Items/Item.h"
 #include "Camera/CameraComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "Components/InputComponent.h"
@@ -123,9 +124,9 @@ void AInvenShopCharacter::Interact()
 	Params.AddIgnoredActor(this);
 	if(GetWorld()->LineTraceSingleByChannel(HitResult,Start,End,ECC_Visibility,Params))
 	{
-		if(AActor* Actor = HitResult.GetActor())
+		if(IInteractableInterface* Interface = Cast<IInteractableInterface>(HitResult.GetActor()))
 		{
-			UE_LOG(LogTemp,Warning,TEXT("Hit Actor : %s"),*Actor->GetName());
+			Interface->Interact();
 		}
 	}
 }
