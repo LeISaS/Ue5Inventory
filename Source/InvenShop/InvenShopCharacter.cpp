@@ -47,12 +47,8 @@ AInvenShopCharacter::AInvenShopCharacter()
 	FollowCamera->SetupAttachment(CameraBoom, USpringArmComponent::SocketName); // Attach the camera to the end of the boom and let the boom adjust to match the controller orientation
 	FollowCamera->bUsePawnControlRotation = false; // Camera does not rotate relative to arm
 
-	// Note: The skeletal mesh and anim blueprint references on the Mesh component (inherited from Character) 
-	// are set in the derived blueprint asset named ThirdPersonCharacter (to avoid direct content references in C++)
-}
 
-//////////////////////////////////////////////////////////////////////////
-// Input
+}
 
 void AInvenShopCharacter::SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent)
 {
@@ -60,6 +56,8 @@ void AInvenShopCharacter::SetupPlayerInputComponent(class UInputComponent* Playe
 	check(PlayerInputComponent);
 	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &ACharacter::Jump);
 	PlayerInputComponent->BindAction("Jump", IE_Released, this, &ACharacter::StopJumping);
+	
+	PlayerInputComponent->BindAction("Interact", IE_Pressed, this, &AInvenShopCharacter::Interact);
 
 	PlayerInputComponent->BindAxis("Move Forward / Backward", this, &AInvenShopCharacter::MoveForward);
 	PlayerInputComponent->BindAxis("Move Right / Left", this, &AInvenShopCharacter::MoveRight);
@@ -71,20 +69,7 @@ void AInvenShopCharacter::SetupPlayerInputComponent(class UInputComponent* Playe
 	PlayerInputComponent->BindAxis("Turn Right / Left Gamepad", this, &AInvenShopCharacter::TurnAtRate);
 	PlayerInputComponent->BindAxis("Look Up / Down Mouse", this, &APawn::AddControllerPitchInput);
 	PlayerInputComponent->BindAxis("Look Up / Down Gamepad", this, &AInvenShopCharacter::LookUpAtRate);
-
-	// handle touch devices
-	PlayerInputComponent->BindTouch(IE_Pressed, this, &AInvenShopCharacter::TouchStarted);
-	PlayerInputComponent->BindTouch(IE_Released, this, &AInvenShopCharacter::TouchStopped);
-}
-
-void AInvenShopCharacter::TouchStarted(ETouchIndex::Type FingerIndex, FVector Location)
-{
-	Jump();
-}
-
-void AInvenShopCharacter::TouchStopped(ETouchIndex::Type FingerIndex, FVector Location)
-{
-	StopJumping();
+	
 }
 
 void AInvenShopCharacter::TurnAtRate(float Rate)
@@ -125,5 +110,22 @@ void AInvenShopCharacter::MoveRight(float Value)
 		const FVector Direction = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);
 		// add movement in that direction
 		AddMovementInput(Direction, Value);
+	}
+}
+
+void AInvenShopCharacter::Interact()
+{
+	FVector Start = FollowCamera->GetComponentLocation();
+	FVector End = Start + FollowCamera->GetForwardVector() * 500.f;
+
+	FHitResult HitResult;
+	FCollisionQueryParams Params;
+	Params.AddIgnoredActor(this);
+	if(GetWorld()->LineTraceSingleByChannel(HitResult,Start,End,ECC_Visibility,Params))
+	{
+		if(AActor* Actor = HitResult.GetActor())
+		{
+			UE_LOG(LogTemp,Warning,TEXT("Hit Actor : %s"),*Actor->GetName());
+		}
 	}
 }
