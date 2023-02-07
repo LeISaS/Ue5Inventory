@@ -113,7 +113,7 @@ void AInvenShopCharacter::OnRep_InventoryItems()
 {
 	if(InventoryItems.Num())
 	{
-		AddItemToInventoryWidget(InventoryItems[InventoryItems.Num()-1]);
+		AddItemAndUpdateInventoryWidget(InventoryItems[InventoryItems.Num()-1],InventoryItems);
 	}
 }
 
@@ -135,14 +135,10 @@ void AInvenShopCharacter::AddInventoryItem(FItemData ItemData)
 		if(bIsNewItem)
 		{
 			InventoryItems.Add(ItemData);
-			if(IsLocallyControlled())
-			{
-				OnRep_InventoryItems();
-			}
 		}
-		else
+		if(IsLocallyControlled())
 		{
-			UpdateInventoryWidget(InventoryItems);
+			OnRep_InventoryItems();
 		}
 	}
 }

@@ -78,11 +78,8 @@ protected:
 	void OnRep_InventoryItems();
 
 	UFUNCTION(BlueprintImplementableEvent,Category="TUTORIAL")
-	void AddItemToInventoryWidget(FItemData ItemData);
+	void AddItemAndUpdateInventoryWidget(FItemData ItemData,const TArray<FItemData>& CurrentInventory = TArray<FItemData>());
 
-	UFUNCTION(BlueprintImplementableEvent,Category="TUTORIAL")
-	void UpdateInventoryWidget(const TArray<FItemData>& NewInventoryItems);
-	
 protected:
 	// APawn interface
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
