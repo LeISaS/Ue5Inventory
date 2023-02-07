@@ -241,6 +241,18 @@ void AInvenShopCharacter::UseItem(TSubclassOf<AItem> ItemSubclass)
 			{
 				Item->Use(this);
 			}
+			for(FItemData& Item : InventoryItems)
+			{
+				if(Item.ItemClass == ItemSubclass)
+				{
+					--Item.StackCount;
+					break;
+				}
+			}
+			if(IsLocallyControlled())
+			{
+				OnRep_InventoryItems();
+			}
 		}
 		else
 		{
