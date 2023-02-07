@@ -98,5 +98,8 @@ public:
 	void AddHealth(float Value);
 	void RemoveHunger(float Value);
 	void AddInventoryItem(FItemData ItemData);
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void OpenShop(const TArray<FItemData>& Items);
 };
 

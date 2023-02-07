@@ -3,6 +3,7 @@
 
 #include "ShopKeeper.h"
 #include "Components/SkeletalMeshComponent.h"
+#include "InvenShop/InvenShopCharacter.h"
 #include "Net/UnrealNetwork.h"
 
 AShopKeeper::AShopKeeper()
@@ -31,9 +32,9 @@ void AShopKeeper::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifet
 
 void AShopKeeper::Interact(AInvenShopCharacter* Character)
 {
-	for(FItemData& Item : Items)
+	if(Character)
 	{
-		UE_LOG(LogTemp,Warning,TEXT("Cost : %f"),Item.ItemCost);
+		Character->OpenShop(Items);
 	}
 	
 }
