@@ -142,7 +142,7 @@ void AInvenShopCharacter::AddInventoryItem(FItemData ItemData)
 		}
 		else
 		{
-			UpdateInventoryWidget();
+			UpdateInventoryWidget(InventoryItems);
 		}
 	}
 }
