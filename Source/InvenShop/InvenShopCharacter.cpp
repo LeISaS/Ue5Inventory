@@ -271,7 +271,10 @@ void AInvenShopCharacter::Server_UseItem_Implementation(TSubclassOf<AItem> ItemS
 	{
 		if(Item.ItemClass==ItemSubclass)
 		{
-			UseItem(ItemSubclass);
+			if(Item.StackCount)
+			{
+				UseItem(ItemSubclass);
+			}
 			return;
 		}
 	}
