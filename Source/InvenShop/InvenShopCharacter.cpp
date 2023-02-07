@@ -53,14 +53,6 @@ AInvenShopCharacter::AInvenShopCharacter()
 
 }
 
-void AInvenShopCharacter::OnRep_InventoryItems()
-{
-	if(InventoryItems.Num())
-	{
-		AddItemToInventoryWidget(InventoryItems[InventoryItems.Num()-1]);
-	}
-}
-
 void AInvenShopCharacter::SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent)
 {
 	// Set up gameplay key bindings
@@ -117,14 +109,40 @@ void AInvenShopCharacter::RemoveHunger(float Value)
 	UE_LOG(LogTemp,Warning,TEXT("REMOVED HUNGER : %f"),Hunger);
 }
 
+void AInvenShopCharacter::OnRep_InventoryItems()
+{
+	if(InventoryItems.Num())
+	{
+		AddItemToInventoryWidget(InventoryItems[InventoryItems.Num()-1]);
+	}
+}
+
+
 void AInvenShopCharacter::AddInventoryItem(FItemData ItemData)
 {
 	if(HasAuthority())
 	{
-		InventoryItems.Add(ItemData);
-		if(IsLocallyControlled())
+		bool bIsNewItem = true;
+		for(FItemData& Item : InventoryItems)
 		{
-			OnRep_InventoryItems();
+			if(Item.ItemClass == ItemData.ItemClass)
+			{
+				++Item.StackCount;
+				bIsNewItem = false;
+				break;
+			}
+		}
+		if(bIsNewItem)
+		{
+			InventoryItems.Add(ItemData);
+			if(IsLocallyControlled())
+			{
+				OnRep_InventoryItems();
+			}
+		}
+		else
+		{
+			UpdateInventoryWidget();
 		}
 	}
 }

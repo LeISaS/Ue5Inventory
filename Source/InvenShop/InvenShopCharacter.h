@@ -79,6 +79,9 @@ protected:
 
 	UFUNCTION(BlueprintImplementableEvent,Category="TUTORIAL")
 	void AddItemToInventoryWidget(FItemData ItemData);
+
+	UFUNCTION(BlueprintImplementableEvent,Category="TUTORIAL")
+	void UpdateInventoryWidget();
 	
 protected:
 	// APawn interface
