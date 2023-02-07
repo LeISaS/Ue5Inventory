@@ -115,6 +115,10 @@ void AInvenShopCharacter::OnRep_InventoryItems()
 	{
 		AddItemAndUpdateInventoryWidget(InventoryItems[InventoryItems.Num()-1],InventoryItems);
 	}
+	else
+	{
+		AddItemAndUpdateInventoryWidget(FItemData(),InventoryItems);
+	}
 }
 
 
@@ -241,13 +245,19 @@ void AInvenShopCharacter::UseItem(TSubclassOf<AItem> ItemSubclass)
 			{
 				Item->Use(this);
 			}
+			uint8 Index = 0;
 			for(FItemData& Item : InventoryItems)
 			{
 				if(Item.ItemClass == ItemSubclass)
 				{
 					--Item.StackCount;
+					if(Item.StackCount<=0)
+					{
+						InventoryItems.RemoveAt(Index);
+					}
 					break;
 				}
+				++Index;
 			}
 			if(IsLocallyControlled())
 			{
