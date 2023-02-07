@@ -25,7 +25,7 @@ protected:
 protected:
 	UPROPERTY(EditDefaultsOnly,Category = "TUTORIAL")
 	class UStaticMeshComponent* ItemMesh;
-	UPROPERTY(EditDefaultsOnly,Category = "TUTORIAL")
+	UPROPERTY(EditAnywhere,Category = "TUTORIAL")
 	FItemData ItemData;
 	
 
